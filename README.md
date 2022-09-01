@@ -1,4 +1,18 @@
+
 # ecommerce-react-with-typescript-project
+
+## Dummy Credentials
+### For Login Use:
+- email: eve.holt@reqres.in
+- password: cityslicka
+
+### For Sign Up Use:
+- email: eve.holt@reqres.in
+- password: pistolw
+
+## APIs Used
+- https://reqres.in/
+- https://fakestoreapi.com/
 
 ## Scripts 
 
