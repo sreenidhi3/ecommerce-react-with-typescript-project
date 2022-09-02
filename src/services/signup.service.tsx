@@ -6,7 +6,9 @@ export const signup=(data:SignUpRequestType):Promise<SignUpResponseType>=>{
         email: data.email,
         password: data.password
       })
-      .then(response =>{console.log(response.data); return response.data})
+      .then(response =>{
+        // console.log(response.data);
+         return response.data})
       .catch(function (error) {
         console.log(error.response.data);
         // return error

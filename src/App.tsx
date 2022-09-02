@@ -48,7 +48,7 @@ function App() {
     useEffect(()=>{
         if(storedCart && storedCart.length){
             dispatch(setCartAction(storedCart))
-            console.log(storedCart)
+            // console.log(storedCart)
         }
     },[])
   useEffect(()=>{
@@ -65,13 +65,13 @@ function App() {
   },[])
   const dispatch = useDispatch();
   const combiState = useSelector((state: RootState) => state);
-  console.log("CObstate", combiState)
+  // console.log("CObstate", combiState)
   const state = useSelector((state: RootState) => state.loginReducer);
   useEffect(()=>{
       dispatch(fetchCategoriesAction())
       dispatch(fetchProductsAction())
   }, [])
-  console.log(state)
+  // console.log(state)
   return (
     <div className='app'>
       <NavBar/>

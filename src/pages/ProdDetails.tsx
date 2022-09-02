@@ -17,7 +17,7 @@ export const SingleProduct:FC<props>=({id})=>{
     const navigate = useNavigate()
     useEffect(()=>{
         let p:ProductType = allProducts.filter((prod)=>prod.id === id)[0];
-        console.log(p, id)
+        // console.log(p, id)
         setProduct(p)
         let add = cart.filter((it)=>it.id===id).length
         add ? setAdded(true) : setAdded(false)

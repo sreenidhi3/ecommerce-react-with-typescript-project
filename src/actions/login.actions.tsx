@@ -6,12 +6,12 @@ import { ClearUser, clearUserActionType, LoginErrorType, LoginRequestType, Login
   }
 
   export const setUserAction = (payload: LoginUser):setUserActionType=>{
-    console.log("set", payload)
+    // console.log("set", payload)
     return({type:"SET_USER", payload})
   }
   
   export const clearUserAction = ():clearUserActionType=>{
-    console.log("at fetchAction creator")
+    // console.log("at fetchAction creator")
     return({type:"CLEAR_USER", payload: {isUserLoggedIn: false}})
   }
   

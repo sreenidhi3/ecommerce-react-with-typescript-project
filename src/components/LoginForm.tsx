@@ -21,7 +21,7 @@ const LoginForm =()=>{
         if (localStorage.getItem("token")){
             user = JSON.parse(localStorage.getItem('user') as string)
             if(user!==null){
-                console.log("not here")
+                // console.log("not here")
                 dispatch(setUserAction(user))
             }
         }

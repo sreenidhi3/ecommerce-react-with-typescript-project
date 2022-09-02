@@ -8,7 +8,7 @@ export const login=(data:LoginRequestType):Promise<LoginResponseType>=>{
       })
       .then(response =>{console.log(response.data); return response.data})
       .catch(function (error) {
-        console.log(error.response.data);
+        // console.log(error.response.data);
         // return error
         throw(error.response.data.error)
       });

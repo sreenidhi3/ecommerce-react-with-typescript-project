@@ -14,15 +14,15 @@ let initialState:LoginUserState = {
 export const loginReducer = (state=initialState, action: LoginReducerActionType):LoginUserState=>{
     switch(action.type){
         case "SET_USER":{
-            console.log(action.payload);
+            // console.log(action.payload);
             return {...state, user: action.payload as LoginUser, isUserLoggedIn: true}
         }
         case "CLEAR_USER":{
-            console.log(action.payload);
+            // console.log(action.payload);
             return {...initialState, isUserLoggedIn:false}
         }
         case "LOGIN_ERROR":{
-            console.log(action.payload)
+            // console.log(action.payload)
             return {...initialState, isUserLoggedIn:false, ...action.payload}
         }
         case "LOGOUT":{

@@ -60,7 +60,7 @@ const SignUp =()=>{
     //     setPassword(value)
     // }    
 
-    console.log("SignUp", state)
+    // console.log("SignUp", state)
     return(
         <div className='container'>
             <form>

@@ -7,11 +7,11 @@ import { clearCartAction } from "../actions/products.actions";
 
 export function* workerLoginSaga(action:loginUserActionType){
     try{
-        console.log("in the worker login saga ");
-        console.log(action);
+        // console.log("in the worker login saga ");
+        // console.log(action);
         // yield put(setIsLoadingAction(true))
         const response:LoginResponseType = yield call(login, action.payload)
-        console.log("resp", response)
+        // console.log("resp", response)
         yield put(setUserAction({email: action.payload.email,...response}))
         // yield put(setIsLoadingAction(false))
     }catch(err){
@@ -22,7 +22,7 @@ export function* workerLoginSaga(action:loginUserActionType){
 
 export function* workerLogoutSaga(){
     try{
-        console.log("in the worker logout saga ");
+        // console.log("in the worker logout saga ");
         // yield put(setIsLoadingAction(true))
         yield put (clearCartAction())
         localStorage.removeItem("user")
@@ -35,7 +35,7 @@ export function* workerLogoutSaga(){
 }
 
 export function* watcherLoginSaga(){
-    console.log("watcher login saga" )
+    // console.log("watcher login saga" )
     yield takeEvery(LoginReducerActionsType.LOGIN_USER, workerLoginSaga)
     yield takeEvery(LoginReducerActionsType.CLEAR_USER, workerLogoutSaga)
 }
