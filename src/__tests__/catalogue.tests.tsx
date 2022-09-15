@@ -9,6 +9,7 @@ import { watcherProductsSaga, workerRemoveFromCartSaga, workerAddToCartSaga, wor
 import {fetchAllCategories, fetchAllProducts} from "../services/products.service"
 import { ProductsReducerActionsType, ProductStateType, ProductType, singleCategoryType } from "../types/products.types";
 import configureStore from 'redux-mock-store';
+import { setLoadingAction } from "../actions/login.actions";
 
 
 const mockStore = configureStore([]);
@@ -230,6 +231,7 @@ describe("products watcher saga",()=>{
 describe("fetch products worker saga",()=>{
     it("must put products to reducer after fetch", ()=>{
         let workerItr = workerProductsFetchSaga({type: "FETCH_PRODUCTS"})
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(true)))
         let fetchProductsResponse = workerItr.next().value
         expect(fetchProductsResponse).toEqual(call(fetchAllProducts)) 
         // expect(callLoginResponse).toEqual(call(login, action.payload)) 
@@ -243,17 +245,20 @@ describe("fetch products worker saga",()=>{
                     rating:{"rate":3.9,"count":120}
                 }]
         expect(put(setProductsAction(res))).toEqual(workerItr.next(res).value)
-            expect(workerItr.next().done).toBeTruthy()
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(false)))
+        expect(workerItr.next().done).toBeTruthy()
     })
 })
 
 describe("fetch categories worker saga",()=>{
     it("must put categories to reducer after fetch", ()=>{
         let workerItr = workerCategoriesFetchSaga({type: "FETCH_CATEGORIES"})
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(true)))
         let fetchCategoriesResponse = workerItr.next().value
         expect(fetchCategoriesResponse).toEqual(call(fetchAllCategories)) 
         let res:singleCategoryType[]=["men's clothing", "jewelery"]
         expect(put(setCategoriesAction(res))).toEqual(workerItr.next(res).value)
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(false)))
         expect(workerItr.next().done).toBeTruthy()
     })
 })
@@ -389,75 +394,6 @@ describe('check catalogue component render', () => {
         expect(screen.queryByText("Remove Filter")).not.toBeInTheDocument();
     })
 
-    test("must render remove filter button", async()=>{
-        fireEvent.click(screen.getByText(/jewelery/i));
-        store = mockStore({
-            loginReducer: {
-                isUserLoggedIn: true,
-                user: {
-                    name: "eve.holt@reqres.in",
-                    email: "cityslicka",
-                    token: "QpwL5tke4Pnpja7X"
-                },
-                error: ""
-            },
-            productReducer:{
-                activeCategory:"jewelery",
-                allCategories:['electronics', 'jewelery', "men's clothing", "women's clothing"],
-                allProducts:[{
-                    id :1,
-                    title:"Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-                    price:109.95,
-                    description:"Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-                    category:"men's clothing",
-                    image:"https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-                    rating:{"rate":3.9,"count":120}
-                }, {
-                    "id": 7,
-                    "title": "White Gold Plated Princess",
-                    "price": 9.99,
-                    "description": "Classic Created Wedding Engagement Solitaire Diamond Promise Ring for Her. Gifts to spoil your love more for Engagement, Wedding, Anniversary, Valentine's Day...",
-                    "category": "jewelery",
-                    "image": "https://fakestoreapi.com/img/71YAIFU48IL._AC_UL640_QL65_ML3_.jpg",
-                    "rating": {
-                      "rate": 3,
-                      "count": 400
-                    }
-                  }],
-                activeProducts:[{
-                    "id": 7,
-                    "title": "White Gold Plated Princess",
-                    "price": 9.99,
-                    "description": "Classic Created Wedding Engagement Solitaire Diamond Promise Ring for Her. Gifts to spoil your love more for Engagement, Wedding, Anniversary, Valentine's Day...",
-                    "category": "jewelery",
-                    "image": "https://fakestoreapi.com/img/71YAIFU48IL._AC_UL640_QL65_ML3_.jpg",
-                    "rating": {
-                      "rate": 3,
-                      "count": 400
-                    }
-                  }],
-                cart:[]
-            },
-            signUpReducer:{
-                isUserSignedUp:false,
-                user:{
-                    id:null,
-                    email:"",
-                    token:""
-                },
-                error:""
-            }
-          });
-          render(
-            <Provider store={store}>
-                <BrowserRouter>
-                    <App/>
-                </BrowserRouter>
-            </Provider>
-            );
-        expect(await screen.findByText(/remove filter/i)).toBeInTheDocument();
-    })
-
     test("must render product cards", ()=>{
         expect(screen.getAllByText(/Add To Cart/i)).toHaveLength(2);
     })
@@ -468,6 +404,7 @@ describe('check catalogue component render', () => {
         fireEvent.change(screen.getByPlaceholderText(/search/i), {
             target: { value: 'white' },
         });
+        fireEvent.click(screen.getByText("Search"))
         expect(screen.getAllByText("Add To Cart")).toHaveLength(1)
     })
 

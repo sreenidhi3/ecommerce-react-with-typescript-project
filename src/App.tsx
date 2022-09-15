@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from './store';
 import LoginForm from './components/LoginForm';
 import SignUp from './components/SignUp';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Catalogue from './pages/Catalogue';
 import { fetchAllCategories, fetchAllProducts } from './services/products.service';
 import { fetchCategoriesAction, ProductType } from './types/products.types';
@@ -16,7 +16,9 @@ import Error from './pages/Error';
 import Payment from './pages/Payment';
 import Home from './pages/Home';
 import { LoginUser } from './types/login.types';
-import { setUserAction } from './actions/login.actions';
+import { setActiveAction, setLoadingAction, setUserAction } from './actions/login.actions';
+import Footer from './components/Footer';
+import Loader from './components/Loader';
 
 const Success=()=>{
   const {isUserLoggedIn, user} = useSelector((state:RootState)=> state.loginReducer)
@@ -45,7 +47,10 @@ function App() {
   }catch(err){
     storedCart=[]
   }
-    useEffect(()=>{
+  useEffect(()=>{
+    dispatch(setActiveAction(10))
+},[])
+  useEffect(()=>{
         if(storedCart && storedCart.length){
             dispatch(setCartAction(storedCart))
             // console.log(storedCart)
@@ -69,12 +74,15 @@ function App() {
   const state = useSelector((state: RootState) => state.loginReducer);
   useEffect(()=>{
       dispatch(fetchCategoriesAction())
-      dispatch(fetchProductsAction())
+      dispatch(fetchProductsAction())   
   }, [])
   // console.log(state)
   return (
-    <div className='app'>
+    <div className='app' style={{minHeight: "100vh"}}>
       <NavBar/>
+      {
+        state.isLoading ? 
+          <Loader/> : 
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/error" element={<Error/>} />
@@ -87,6 +95,8 @@ function App() {
           <Route path="/success" element={<Success />} />
           <Route path='*' element={<Error/>}/>
         </Routes>
+      }
+      <Footer/>
     </div>
   );
 }

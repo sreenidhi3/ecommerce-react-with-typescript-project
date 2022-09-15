@@ -8,7 +8,7 @@ import { LoginErrorType, LoginReducerActionsType, LoginResponseType, loginUserAc
 import {loginReducer} from "../reducers/login.reducers"
 import { watcherLoginSaga, workerLoginSaga, workerLogoutSaga} from "../sagas/login.saga";
 import { login } from "../services/login.service";
-import { logoutUserAction, setLoginError, setUserAction } from "../actions/login.actions";
+import { logoutUserAction, setLoadingAction, setLoginError, setUserAction } from "../actions/login.actions";
 import { Provider } from "react-redux";
 import store from "../store";
 import App from "../App";
@@ -58,22 +58,26 @@ describe("check login reducer functions", ()=>{
     let initialState:LoginUserState, state:LoginUserState;
     beforeEach(()=>{
     initialState = {
+        isLoading: false,
         isUserLoggedIn: false,
         user: {
             name: "",
             email:"",
             token:"",
             },
-        error: ""
+        error: "",
+        activeTab: 0
     }
     state = {
+        isLoading: false,
         isUserLoggedIn: true,
         user: {
             name: "eve.holt@gmail.com",
             email:"eve.holt@gmail.com",
             token:"djiu9i9e8onj",
             },
-        error: ""
+        error: "",
+        activeTab: 0
     }
     }
     )
@@ -85,11 +89,23 @@ describe("check login reducer functions", ()=>{
             token: "89hdv7y7893vb"
         }
         let updatedState = {...state, user:{...payload}, isUserLoggedIn: true }
-        expect(loginReducer(initialState, { type: "SET_USER", payload })).toEqual(updatedState);
+        expect(loginReducer(initialState, { type: "SET_USER_L", payload })).toEqual(updatedState);
     })
 
     it("CLEAR_USER must return initial empty state",()=>{
         expect(loginReducer(state, { type: "CLEAR_USER" })).toEqual(initialState);
+    })
+
+    it("SET_ACTIVE must return state with updated active tab",()=>{
+        expect(loginReducer(initialState, { type: "SET_ACTIVE", payload: 2 })).toEqual({...initialState, activeTab: 2});
+    })
+
+    it("SET_LOADING must return loading state as true when payload is true",()=>{
+        expect(loginReducer(initialState, { type: "SET_LOADING", payload: true })).toEqual({...initialState, isLoading: true});
+    })
+
+    it("SET_LOADING must return loading state as false when payload is false",()=>{
+        expect(loginReducer(initialState, { type: "SET_LOADING", payload: false })).toEqual({...initialState, isLoading: false});
     })
 
     it("LOGIN_ERROR with must update the error field of initial state",()=>{
@@ -124,7 +140,7 @@ describe("check login watcher saga",()=>{
 })
 
 describe("check login worker saga",()=>{
-    it("check login worker saga without any errors",()=>{
+    it("check login worker saga without any errors",()=>{        
         let action:loginUserActionType={
             type:"LOGIN_USER",
             payload: {
@@ -134,6 +150,8 @@ describe("check login worker saga",()=>{
         }
     
         let workerItr = workerLoginSaga(action)
+        let putloadingResponse = workerItr.next().value
+        expect(putloadingResponse).toEqual(put(setLoadingAction(true)))
         let callLoginResponse = workerItr.next().value
         expect(callLoginResponse).toEqual(call(login, action.payload)) 
         let res={
@@ -145,6 +163,8 @@ describe("check login worker saga",()=>{
         }
         let response = workerItr.next(payload).value
         expect(response).toEqual(put(setUserAction(payload)))
+        putloadingResponse = workerItr.next().value
+        expect(putloadingResponse).toEqual(put(setLoadingAction(false)))
         expect(workerItr.next().done).toBeTruthy()
     })  
 
@@ -158,11 +178,13 @@ describe("check login worker saga",()=>{
         }
     
         let workerItr = workerLoginSaga(action)
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(true)))
         expect(workerItr.next().value).toEqual(call(login, action.payload))
         let err:LoginErrorType={
             error: "error"
         }
         expect(workerItr.throw("error").value).toEqual(put(setLoginError(err)))
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(false)))
         expect(workerItr.next().done).toBeTruthy()
     })  
 })
@@ -170,9 +192,11 @@ describe("check login worker saga",()=>{
 describe("check logout worker saga",()=>{
     it("check logout worker saga without any errors",()=>{
         let workerItr = workerLogoutSaga()
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(true)))
         expect(workerItr.next().value).toEqual(put(clearCartAction()))
         
         expect(workerItr.next().value).toEqual(put(logoutUserAction()))
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(false)))
         expect(workerItr.next().done).toBeTruthy()
     })  
 
@@ -186,11 +210,13 @@ describe("check logout worker saga",()=>{
         }
     
         let workerItr = workerLoginSaga(action)
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(true)))
         expect(workerItr.next().value).toEqual(call(login, action.payload))
         let err:LoginErrorType={
             error: "error"
         }
         expect(workerItr.throw("error").value).toEqual(put(setLoginError(err)))
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(false)))
         expect(workerItr.next().done).toBeTruthy()
     })  
 })
@@ -217,22 +243,31 @@ describe('check login form render', () => {
         expect(screen.getByRole("submit-form")).toBeInTheDocument();
     })
 
-    test("renders error for invalid email in LoginForm and submit button is disabled",()=>{
+    test("renders error for invalid email in LoginForm and submit button is disabled",async()=>{
         expect(screen.getByRole('email-input')).toHaveValue("")
         expect(screen.getByRole('password-input')).toHaveValue("")
         fireEvent.change(screen.getByRole('email-input'), {
-            target: { value: 'eve.holt@re' },
+            target: { value: 'eve.holt' },
         });
+        fireEvent.change(screen.getByRole('password-input'), {
+            target: { value: 'citys67' },
+        });
+        fireEvent.click(screen.getByRole('submit-form'))
+        expect(await screen.findByText("Enter a valid email")).toBeInTheDocument()
         expect(screen.getByRole("submit-form")).toBeDisabled();
     })
 
-    test("renders error for invalid password in LoginForm and submit button is disabled",()=>{
+    test("renders error for invalid password in LoginForm and submit button is disabled",async()=>{
         expect(screen.getByRole('email-input')).toHaveValue("")
         expect(screen.getByRole('password-input')).toHaveValue("")
+        fireEvent.change(screen.getByRole('email-input'), {
+            target: { value: 'eve.holt@gmail.com' },
+        });
         fireEvent.change(screen.getByRole('password-input'), {
             target: { value: 'citys' },
         });
-        expect(screen.getByText("Password should be greater than 6 characters")).toBeInTheDocument()
+        fireEvent.click(screen.getByRole('submit-form'))
+        await screen.findByText("Password should be greater than 6 characters")
         expect(screen.getByRole("submit-form")).toBeDisabled();
     })
 

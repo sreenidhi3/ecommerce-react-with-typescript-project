@@ -4,10 +4,12 @@ import { signup } from "../services/signup.service";
 import { setSignUpError, setUserAction } from "../actions/signup.actions";
 import { fetchAllCategories, fetchAllProducts } from "../services/products.service";
 import { addToCartAction, clearCartAction, removeFromCartAction, setCategoriesAction, setProductsAction } from "../actions/products.actions";
+import { setLoadingAction } from "../actions/login.actions";
 
 
 export function* workerProductsFetchSaga(action:fetchProductsActionType){
     try{
+        yield put(setLoadingAction(true))
         // console.log("in the worker product fetch saga ");
         // console.log(action);
         // yield put(setIsLoadingAction(true))
@@ -15,8 +17,10 @@ export function* workerProductsFetchSaga(action:fetchProductsActionType){
         // console.log("resp", response)
         yield put(setProductsAction(response))
         // yield put(setIsLoadingAction(false))
+        yield put(setLoadingAction(false))
     }catch(err){
         yield err
+        yield put(setLoadingAction(false))
         console.log(err)
     }
 }
@@ -26,12 +30,15 @@ export function* workerCategoriesFetchSaga(action:fetchCategoriesActionType){
         // console.log("in the worker categories fetch saga ");
         // console.log(action);
         // yield put(setIsLoadingAction(true))
+        yield put(setLoadingAction(true))
         const response:singleCategoryType[] = yield call(fetchAllCategories)
         console.log("resp", response)
         yield put(setCategoriesAction(response))
         // yield put(setIsLoadingAction(false))
+        yield put(setLoadingAction(false))
     }catch(err){
         console.log(err)
+        yield put(setLoadingAction(false))
     }
 }
 

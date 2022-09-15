@@ -1,13 +1,19 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { setActiveAction } from "../actions/login.actions";
 import Banner from "../components/Banner";
 import "../styles/home.styles.css"
 
 const Home =()=>{
+    const dispatch = useDispatch()
+    useEffect(()=>{
+        dispatch(setActiveAction(10))
+    },[])
     return(
         <div>
             <Banner/>
             <div className="row center">
-                <Link to="/products"><button style={{margin: "1rem"}} className="row banner-btn center">Shop Now</button></Link>
             </div>
         </div>
     )

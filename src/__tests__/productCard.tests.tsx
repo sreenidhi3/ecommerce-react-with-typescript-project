@@ -13,13 +13,15 @@ describe("check product card render",()=>{
     beforeEach(()=>{
         store = mockStore({
             loginReducer: {
+                isLoading: false,
                 isUserLoggedIn: true,
                 user: {
                     name: "eve.holt@reqres.in",
                     email: "cityslicka",
                     token: "QpwL5tke4Pnpja7X"
                 },
-                error: ""
+                error: "",
+                activeTab:0
             },
             productReducer:{
                 activeCategory:"",

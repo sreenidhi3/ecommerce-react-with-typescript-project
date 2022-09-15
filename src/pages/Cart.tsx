@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../components/ProductCard";
 import { RootState } from "../store";
 import { ProductType } from "../types/products.types";
@@ -6,11 +6,16 @@ import "../styles/products.styles.css"
 import CartCard from "../components/CartCard";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { setActiveAction } from "../actions/login.actions";
 
 const Cart=()=>{
     const {isUserLoggedIn, user} = useSelector((state:RootState)=> state.loginReducer)
     const {cart} = useSelector((state: RootState) => state.productReducer);
+    const dispatch = useDispatch()
     const navigate = useNavigate()
+    useEffect(()=>{
+        dispatch(setActiveAction(2))
+    },[])
     useEffect(()=>{
         if(!isUserLoggedIn){
             navigate("/login")

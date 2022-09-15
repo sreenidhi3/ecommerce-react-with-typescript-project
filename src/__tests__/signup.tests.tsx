@@ -13,6 +13,7 @@ import { setSignUpError, setUserAction, signUpUserAction } from "../actions/sign
 import { watcherSignUpSaga ,workerSignUpSaga} from "../sagas/signup.saga";
 import store from "../store";
 import SignUp from "../components/SignUp";
+import { setLoadingAction } from "../actions/login.actions";
 
 describe("check signup reducer functions", ()=>{
     let initialState:SignUpUserState, state:SignUpUserState;
@@ -80,6 +81,7 @@ describe("check sign up worker saga",()=>{
         }
     
         let workerItr = workerSignUpSaga(action)
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(true)))
         let callSignUpResponse = workerItr.next().value
         expect(callSignUpResponse).toEqual(call(signup, action.payload)) 
         let res={
@@ -93,6 +95,7 @@ describe("check sign up worker saga",()=>{
             }
         let resp = workerItr.next(payload).value;
         expect(resp).toEqual(put(setUserAction(payload)))
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(false)))
         expect(workerItr.next().done).toBeTruthy()
     })  
 
@@ -105,11 +108,13 @@ describe("check sign up worker saga",()=>{
             }
         }
         let workerItr = workerSignUpSaga(action)
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(true)))
         expect(workerItr.next().value).toEqual(call(signup, action.payload))
         let err:SignUpErrorType={
             error: "error"
         }
         expect(workerItr.throw("error").value).toEqual(put(setSignUpError(err)))
+        expect(workerItr.next().value).toEqual(put(setLoadingAction(false)))
         expect(workerItr.next().done).toBeTruthy()
     })  
 })
@@ -142,17 +147,25 @@ describe('check sign up form render', () => {
         fireEvent.change(screen.getByRole('email-input'), {
             target: { value: 'eve.holt@re' },
         });
+        fireEvent.change(screen.getByRole('password-input'), {
+            target: { value: 'pistole' },
+        });
+        fireEvent.click(screen.getByRole('submit-form'))
         expect(await screen.findByText("Enter a valid email")).toBeInTheDocument()
         expect(screen.getByRole("submit-form")).toBeDisabled();
     })
 
-    test("renders error for invalid password in LoginForm and submit button is disabled",()=>{
+    test("renders error for invalid password in LoginForm and submit button is disabled",async()=>{
         expect(screen.getByRole('email-input')).toHaveValue("")
         expect(screen.getByRole('password-input')).toHaveValue("")
         fireEvent.change(screen.getByRole('password-input'), {
             target: { value: 'citys' },
         });
-        expect(screen.getByText("Password should be greater than 6 characters")).toBeInTheDocument()
+        fireEvent.change(screen.getByRole('email-input'), {
+            target: { value: 'eve.holt@gmail.com' },
+        });
+        fireEvent.click(screen.getByRole('submit-form'))
+        expect(await screen.findByText("Password should be greater than 6 characters")).toBeInTheDocument()
         expect(screen.getByRole("submit-form")).toBeDisabled();
     })
 

@@ -126,7 +126,7 @@ export const fetchCategoriesAction=()=>{
     return({type: "FETCH_CATEGORIES"})
 }
 
-export type singleCategoryType = CategoryType["electronics"] | CategoryType["jewelery"] | CategoryType["mens_clothing"] | CategoryType["womens_clothing"] |""
+export type singleCategoryType = CategoryType["electronics"] | CategoryType["jewelery"] | CategoryType["mens_clothing"] | CategoryType["womens_clothing"] | ""  | "all"
 
 export interface setActiveCategoryProductsActionType{
     type: ProductActionsType["SET_ACTIVE_CATEGORY_PRODUCTS"],

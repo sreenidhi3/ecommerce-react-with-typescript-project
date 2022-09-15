@@ -70,9 +70,9 @@ describe('Logged In User', () => {
     })
 
     test("must render home page on click on store",()=>{
-        expect(screen.getAllByRole('button', { name: /shop/i })[0]).toBeInTheDocument()
-        fireEvent.click(screen.getByText("Store"))
-        expect(screen.getAllByRole('button', { name: /shop/i })[1]).toBeInTheDocument()
+        expect(screen.getByRole('button', { name: /shop/i })).toBeInTheDocument()
+        fireEvent.click(screen.getByText("FleekStore"))
+        expect(screen.getByRole('button', { name: /shop/i })).toBeInTheDocument()
     })
         
     test("must render catalogue page on click on shop now button",()=>{

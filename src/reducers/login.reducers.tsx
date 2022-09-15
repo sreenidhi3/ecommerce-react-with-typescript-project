@@ -1,7 +1,9 @@
 import { useReducer } from "react";
-import { LoginReducerActionType, LoginUser, LoginUserState } from "../types/login.types";
+import { LoginErrorType, LoginReducerActionType, LoginUser, LoginUserState } from "../types/login.types";
 
 let initialState:LoginUserState = {
+    isLoading: false,
+    activeTab: 10,
     isUserLoggedIn: false,
     user: {
         name: "",
@@ -13,8 +15,14 @@ let initialState:LoginUserState = {
 
 export const loginReducer = (state=initialState, action: LoginReducerActionType):LoginUserState=>{
     switch(action.type){
-        case "SET_USER":{
-            // console.log(action.payload);
+        case "SET_ACTIVE":{
+            return {...state, activeTab: action.payload as number}
+        }
+        case "SET_LOADING":{
+            return {...state, isLoading: action.payload as boolean}
+        }
+        case "SET_USER_L":{
+            console.log(action.payload);
             return {...state, user: action.payload as LoginUser, isUserLoggedIn: true}
         }
         case "CLEAR_USER":{
@@ -23,7 +31,7 @@ export const loginReducer = (state=initialState, action: LoginReducerActionType)
         }
         case "LOGIN_ERROR":{
             // console.log(action.payload)
-            return {...initialState, isUserLoggedIn:false, ...action.payload}
+            return {...initialState, isUserLoggedIn:false, ...action.payload as LoginErrorType}
         }
         case "LOGOUT":{
             return {...initialState}
