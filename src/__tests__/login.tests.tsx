@@ -66,7 +66,7 @@ describe("check login reducer functions", ()=>{
             token:"",
             },
         error: "",
-        activeTab: 0
+        activeTab: 10
     }
     state = {
         isLoading: false,
@@ -77,7 +77,7 @@ describe("check login reducer functions", ()=>{
             token:"djiu9i9e8onj",
             },
         error: "",
-        activeTab: 0
+        activeTab: 10
     }
     }
     )
@@ -88,7 +88,7 @@ describe("check login reducer functions", ()=>{
             email: "abc@gmail.com",
             token: "89hdv7y7893vb"
         }
-        let updatedState = {...state, user:{...payload}, isUserLoggedIn: true }
+        let updatedState = {...state, user:{...payload}, isUserLoggedIn: true, activeTab: 10}
         expect(loginReducer(initialState, { type: "SET_USER_L", payload })).toEqual(updatedState);
     })
 
@@ -276,7 +276,7 @@ describe('check login form render', () => {
             target: { value: 'eve.holt@gmail.con' },
         });
         fireEvent.change(screen.getByRole('password-input'), {
-            target: { value: 'citysi' },
+            target: { value: 'citysil' },
         });
         fireEvent.click(screen.getByRole('submit-form'))
         // put(setLoginError({error: "user not found"}))
