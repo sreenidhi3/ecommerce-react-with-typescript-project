@@ -21,7 +21,7 @@ export const productReducer = (state=initialState, action: ProductReducerActionT
             return {...state, allCategories:[...action.payload as singleCategoryType[]]}
         }
         case "SET_ACTIVE_CATEGORY":{
-            console.log(action.payload)
+            // console.log(action.payload)
             let products = state.allProducts.filter((p)=>p.category === action.payload)
             return {...state,activeProducts:[...products] ,activeCategory: action.payload as singleCategoryType}
         }

@@ -22,7 +22,7 @@ export const loginReducer = (state=initialState, action: LoginReducerActionType)
             return {...state, isLoading: action.payload as boolean}
         }
         case "SET_USER_L":{
-            console.log(action.payload);
+            // console.log(action.payload);
             return {...state, user: action.payload as LoginUser, isUserLoggedIn: true}
         }
         case "CLEAR_USER":{

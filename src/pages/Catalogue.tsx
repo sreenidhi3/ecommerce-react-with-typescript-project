@@ -51,8 +51,24 @@ const Catalogue=()=>{
     return(
         <div>
             <div className="search-box row center no-wrap">
-                <input autoFocus={true} value={search} className="search-input" type="text" onChange={(e)=>setSearch(e.target.value)} placeholder="Search..."/>
-                <button onClick={()=>handleSearch()} className="btn-primary search-btn" style={{backgroundColor: "var(--primary-400)", cursor:"pointer"}}>Search</button>
+                <input 
+                    autoFocus={true} 
+                    value={search} 
+                    className="search-input" 
+                    type="text" 
+                    onChange={(e)=>
+                        setSearch(e.target.value)
+                    } 
+                    placeholder="Search..."
+                />
+                <button 
+                    onClick={()=>
+                        handleSearch()
+                    } 
+                    className="search-btn" 
+                >
+                    Search
+                </button>
             </div>
             
             <div className="row center">

@@ -6,7 +6,10 @@ export const login=(data:LoginRequestType):Promise<LoginResponseType>=>{
         email: data.email,
         password: data.password
       })
-      .then(response =>{console.log(response.data); return response.data})
+      .then(response =>{
+        // console.log(response.data); 
+        return response.data
+      })
       .catch(function (error) {
         // console.log(error.response.data);
         // return error

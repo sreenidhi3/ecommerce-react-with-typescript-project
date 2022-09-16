@@ -67,10 +67,17 @@
 
 .search-btn{
     border-radius: 0 0.5rem 0.5rem 0 ;
+    border-color: var(--primary-color);
+    background-color: var(--primary-color); 
+    cursor:"pointer";
+    padding: 1rem;
+    color: var(--white);
+    font-size: medium;
 }
 
 .search-btn:hover{
     cursor: pointer;
+    border-color: var(--primary-500);
     background-color: var(--primary-500);
 }
 

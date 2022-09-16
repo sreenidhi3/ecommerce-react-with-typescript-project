@@ -9,7 +9,7 @@ const sagaMiddleware = createSagaMiddleware()
 
 const rootReducer = combineReducers({loginReducer, signUpReducer, productReducer});
 export const store = legacy_createStore(rootReducer, applyMiddleware(sagaMiddleware));
-console.log(store)
+// console.log(store)
 sagaMiddleware.run(rootSaga)
 
 export type RootState = ReturnType<typeof rootReducer>;

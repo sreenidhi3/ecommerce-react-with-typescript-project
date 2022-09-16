@@ -39,20 +39,20 @@ const LoginForm =()=>{
         let validEmail:boolean = false;
         let validPassword:boolean = false;
         if (!emailRegex.test(email)) {
-            console.log(!emailRegex.test(email))
+            // console.log(!emailRegex.test(email))
             setErrEmail("Enter a valid email")  
             validEmail =  false
         }else{
-            console.log("email else")
+            // console.log("email else")
             setErrEmail("")
             validEmail = true
         }
         if(password.length < 6){
-            console.log(password.length < 6)
+            // console.log(password.length < 6)
             setErrPassword("Password should be greater than 6 characters")
             validPassword = false
         }else{
-            console.log("Password else")
+            // console.log("Password else")
             setErrPassword("")
             validPassword = true
         }

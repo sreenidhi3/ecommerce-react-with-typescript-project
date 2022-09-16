@@ -32,7 +32,7 @@ export function* workerCategoriesFetchSaga(action:fetchCategoriesActionType){
         // yield put(setIsLoadingAction(true))
         yield put(setLoadingAction(true))
         const response:singleCategoryType[] = yield call(fetchAllCategories)
-        console.log("resp", response)
+        // console.log("resp", response)
         yield put(setCategoriesAction(response))
         // yield put(setIsLoadingAction(false))
         yield put(setLoadingAction(false))

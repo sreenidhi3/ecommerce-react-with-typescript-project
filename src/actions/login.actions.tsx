@@ -24,7 +24,7 @@ import { ClearUser, clearUserActionType, LoginErrorType, LoginRequestType, Login
   }
 
   export const setActiveAction=(payload:number):setActiveActionType=>{
-    console.log(payload)
+    // console.log(payload)
     return({type:"SET_ACTIVE", payload})
   }
 
